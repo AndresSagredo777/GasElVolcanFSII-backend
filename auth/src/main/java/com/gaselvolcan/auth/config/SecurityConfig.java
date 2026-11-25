@@ -1,6 +1,7 @@
 package com.gaselvolcan.auth.config;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,15 +20,16 @@ public class SecurityConfig {
     return http.csrf(csrf -> csrf.disable())
       .cors(Customizer.withDefaults())
       .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/auth/**", "/swagger-ui/**",
+        .requestMatchers("/auth/login", "/auth/registro", "/swagger-ui/**",
           "/swagger-ui.html", "/v3/api-docs/**").permitAll()
         .anyRequest().denyAll())
       .build();
     }
 
-    @Bean CorsConfigurationSource corsConfigurationSource() {
+    @Bean CorsConfigurationSource corsConfigurationSource(
+            @Value("${app.cors.allowed-origin:http://localhost:5173}") String allowedOrigin) {
         CorsConfiguration c = new CorsConfiguration();
-        c.setAllowedOrigins(List.of("http://localhost:5173"));
+        c.setAllowedOrigins(List.of(allowedOrigin));
         c.setAllowedMethods(List.of("POST", "OPTIONS"));
         c.setAllowedHeaders(List.of("Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 public record ProductoRequest(
+        @Size(max = 20) String codigo,
         @NotBlank @Size(max = 150) String nombre,
         @NotBlank @Size(max = 100) String categoria,
         @NotNull @PositiveOrZero Integer precio,

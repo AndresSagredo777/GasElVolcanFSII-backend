@@ -1,0 +1,114 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-crear-pedidos
+      author: gaselvolcan
+      changes:
+        - createTable:
+            tableName: pedidos
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: correo_cliente
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nombre_destinatario
+                  type: VARCHAR(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: telefono
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: direccion
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: estado
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creado_en
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: pedidos
+            indexName: idx_pedidos_correo_fecha
+            columns:
+              - column:
+                  name: correo_cliente
+              - column:
+                  name: creado_en
+        - createTable:
+            tableName: detalle_pedido
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: pedido_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: producto_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: codigo
+                  type: VARCHAR(20)
+              - column:
+                  name: nombre_producto
+                  type: VARCHAR(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: precio_unitario
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cantidad
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subtotal
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: detalle_pedido
+            baseColumnNames: pedido_id
+            constraintName: fk_detalle_pedido_pedido
+            referencedTableName: pedidos
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - createIndex:
+            tableName: detalle_pedido
+            indexName: idx_detalle_pedido_pedido
+            columns:
+              - column:
+                  name: pedido_id

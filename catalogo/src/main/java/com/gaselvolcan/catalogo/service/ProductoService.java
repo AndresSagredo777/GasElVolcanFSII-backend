@@ -42,12 +42,14 @@ public class ProductoService {
     }
 
     public Producto crear(ProductoRequest datos) {
+        validarOferta(datos);
         Producto producto = new Producto();
         copiarDatos(producto, datos, false);
         return repository.save(producto);
     }
 
     public Producto actualizar(Long id, ProductoRequest datos) {
+        validarOferta(datos);
         Producto producto = buscar(id);
         copiarDatos(producto, datos, true);
         return repository.save(producto);
@@ -58,6 +60,9 @@ public class ProductoService {
     }
 
     private void copiarDatos(Producto producto, ProductoRequest datos, boolean esActualizacion) {
+        if (!esActualizacion || datos.codigo() != null) {
+            producto.setCodigo(datos.codigo() == null || datos.codigo().isBlank() ? null : datos.codigo().trim());
+        }
         producto.setNombre(datos.nombre().trim());
         producto.setCategoria(datos.categoria().trim());
         producto.setPrecio(datos.precio());
@@ -66,11 +71,25 @@ public class ProductoService {
         producto.setImagen(datos.imagen().trim());
         producto.setDescripcion(datos.descripcion() == null ? null : datos.descripcion().trim());
 
-        if (!esActualizacion || datos.precioAnterior() != null) {
-            producto.setPrecioAnterior(datos.precioAnterior());
-        }
-        if (!esActualizacion || datos.descuento() != null) {
-            producto.setDescuento(datos.descuento());
+        producto.setPrecioAnterior(datos.precioAnterior());
+        producto.setDescuento(datos.descuento());
+    }
+
+    private void validarOferta(ProductoRequest datos) {
+        if (Boolean.TRUE.equals(datos.oferta())) {
+            if (datos.precioAnterior() == null || datos.precioAnterior() <= datos.precio()) {
+                throw new IllegalArgumentException("Una oferta requiere un precio anterior mayor al precio actual");
+            }
+            if (datos.descuento() == null) {
+                throw new IllegalArgumentException("Una oferta requiere informar el descuento");
+            }
+            int porcentajeCalculado = (int) Math.round(
+                    (datos.precioAnterior() - (double) datos.precio()) * 100 / datos.precioAnterior());
+            if (datos.descuento() != porcentajeCalculado) {
+                throw new IllegalArgumentException("El descuento no coincide con los precios informados");
+            }
+        } else if (datos.precioAnterior() != null || datos.descuento() != null) {
+            throw new IllegalArgumentException("Sin oferta, precio anterior y descuento deben ser nulos");
         }
     }
 }

@@ -6,4 +6,5 @@ import com.gaselvolcan.auth.model.Usuario;
 
 public interface AuthRepository extends JpaRepository <Usuario, Long>{
     Optional<Usuario> findByCorreo(String correo);
+    boolean existsByCorreoIgnoreCase(String correo);
 }

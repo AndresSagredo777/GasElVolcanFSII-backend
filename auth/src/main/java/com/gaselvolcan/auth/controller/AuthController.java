@@ -1,22 +1,29 @@
 package com.gaselvolcan.auth.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import com.gaselvolcan.auth.dto.*;
 import com.gaselvolcan.auth.service.AuthService;
-import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping ("/auth") 
 public class AuthController {
-    @Autowired AuthService auth;
+    private final AuthService auth;
+
+    public AuthController(AuthService auth) {
+        this.auth = auth;
+    }
 
     @PostMapping ("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request ){
         return auth.login(request);
+    }
+
+    @PostMapping("/registro")
+    public ResponseEntity<LoginResponse> registrar(@Valid @RequestBody RegistroRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(auth.registrar(request));
     }
 
 }
