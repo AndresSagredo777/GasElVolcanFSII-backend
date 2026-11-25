@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-crear-productos
+      author: gaselvolcan
+      changes:
+        - createTable:
+            tableName: productos
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: codigo
+                  type: VARCHAR(20)
+                  constraints:
+                    unique: true
+              - column:
+                  name: nombre
+                  type: VARCHAR(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: categoria
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: precio
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: precio_anterior
+                  type: INT
+              - column:
+                  name: descuento
+                  type: INT
+              - column:
+                  name: stock
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: oferta
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: imagen
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: descripcion
+                  type: VARCHAR(1000)

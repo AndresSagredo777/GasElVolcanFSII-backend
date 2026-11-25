@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-crear-usuarios
+      author: gaselvolcan
+      changes:
+        - createTable:
+            tableName: usuarios
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: correo
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rol
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
